@@ -1,15 +1,40 @@
-import React from "react";
-import { Layout, Card, Statistic } from "antd";
+import React, { useEffect, useState } from "react";
+import { Layout, Card, Statistic, List, Typography } from "antd";
 import { ArrowDownOutlined, ArrowUpOutlined } from "@ant-design/icons";
+import { fakeFetchAssests } from "../../api";
+
+const data = [
+  "Racing car sprays burning fuel into crowd.",
+  "Japanese princess to wed commoner.",
+  "Australian walks 100km after outback crash.",
+  "Man charged over missing wedding girl.",
+  "Los Angeles battles huge wildfires.",
+];
 
 const siderStyle = {
   padding: "1rem",
 };
 
 const AppSider = () => {
+  const [loading, setLoading] = useState(false);
+  const [crypto, setCrypto] = useState([]);
+  const [assets, setAssets] = useState([]);
+  useEffect(() => {
+    async function preload() {
+      setLoading(true);
+      const { result } = await fakeFetchAssests();
+      const assest = await fakeFetchAssests();
+
+      setAssets(assets);
+      setCrypto(result);
+      setLoading(false);
+      
+      }
+      preload();
+  }, []);
   return (
     <Layout.Sider width="25%" style={siderStyle}>
-      <Card>
+      <Card style={{ marginBottom: "1rem" }}>
         <Statistic
           title="Active"
           value={11.28}
@@ -19,6 +44,15 @@ const AppSider = () => {
           }}
           prefix={<ArrowUpOutlined />}
           suffix="%"
+        />
+        <List
+          size="small"
+          dataSource={data}
+          renderItem={(item) => (
+            <List.Item>
+              <Typography.Text mark>[ITEM]</Typography.Text> {item}
+            </List.Item>
+          )}
         />
       </Card>
       <Card>
