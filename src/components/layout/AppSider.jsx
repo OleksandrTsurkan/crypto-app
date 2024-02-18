@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Layout, Card, Statistic, List, Typography } from "antd";
+import { Layout, Card, Statistic, List, Typography, Spin } from "antd";
 import { ArrowDownOutlined, ArrowUpOutlined } from "@ant-design/icons";
 import { fakeFetchAssests } from "../../api";
 
@@ -10,6 +10,10 @@ const data = [
   "Man charged over missing wedding girl.",
   "Los Angeles battles huge wildfires.",
 ];
+
+function percentDefference(a, b) {
+  return 100 * Math.abs((a - b) / ((a + b) / 2));
+}
 
 const siderStyle = {
   padding: "1rem",
@@ -25,13 +29,27 @@ const AppSider = () => {
       const { result } = await fakeFetchAssests();
       const assest = await fakeFetchAssests();
 
-      setAssets(assets);
+      setAssets(
+        assets.map((asset) => {
+          const coin = result.find((c) => c.id === asset.id);
+          return {
+            grow: asset.price < coin.price,
+            growPercent: percentDefference(asset.price, coin.price),
+            totalAmount: asset.amount * coin.price,
+            totalProfit: asset.amount * coin.price - asset.amount * asset.price,
+            ...asset,
+          };
+        })
+      );
       setCrypto(result);
       setLoading(false);
-      
-      }
-      preload();
+    }
+    preload();
   }, []);
+
+  if (loading) {
+    <Spin fullscreen />;
+  }
   return (
     <Layout.Sider width="25%" style={siderStyle}>
       <Card style={{ marginBottom: "1rem" }}>
