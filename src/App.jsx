@@ -5,12 +5,14 @@ import AppContent from "./components/layout/AppContent";
 
 export default function App() {
   return (
-    <Layout>
-      <AppHeader />
+    <CryptoContextProvider>
       <Layout>
-        <AppSider />
-        <AppContent />
+        <AppHeader />
+        <Layout>
+          <AppSider />
+          <AppContent />
+        </Layout>
       </Layout>
-    </Layout>
+    </CryptoContextProvider>
   );
 }
