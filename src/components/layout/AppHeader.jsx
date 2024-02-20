@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Layout, Select, Space, Button } from "antd";
+import { Layout, Select, Space, Button, Modal, Drawer } from "antd";
 import { UseCrypto } from "../../context/crypto-context";
+import CoinInfoModal from "./CoinInfoModal";
+import AddAssetForm from "./AddAssetForm";
 
 const headerStyle = {
   width: "100%",
@@ -16,19 +18,26 @@ const headerStyle = {
 
 const AppHeader = () => {
   const [select, setSelect] = useState(false);
+  const [coin, setCoin] = useState(null);
+  const [modal, setModal] = useState(false);
+  const [drawer, setDrawer] = useState(false);
   const { crypto } = UseCrypto();
 
   useEffect(() => {
     const keypress = (event) => {
       if (event.key === "/") {
-        setSelect(true);
+        setSelect((prev) => !prev);
       }
     };
     document.addEventListener("keypress", keypress);
+    return () => {
+      document.removeEventListener("keypress", keypress);
+    };
   });
 
   function handleSelect() {
-    console.log(`selected ${value}`);
+    setCoin(crypto.find((c) => c.id === value));
+    setModal(true);
   }
 
   return (
@@ -39,8 +48,8 @@ const AppHeader = () => {
         }}
         open={select}
         onSelect={handleSelect}
+        onClick={() => setSelect((prev) => !prev)}
         value="press / to open"
-        optionLabelProp="label"
         options={crypto.map((coin) => ({
           label: coin.name,
           value: coin.id,
@@ -57,7 +66,29 @@ const AppHeader = () => {
           </Space>
         )}
       />
-      <Button type="primary">Add asset</Button>
+      <Button
+        type="primary"
+        onClick={() => {
+          setDrawer(true);
+        }}
+      >
+        Add asset
+      </Button>
+
+      <Modal open={modal} onCancel={() => setModal(false)} footer={null}>
+        <CoinInfoModal coin={coin} />
+      </Modal>
+
+      <Drawer width={600}
+        title="ADD Asset"
+        onClose={() => {
+          setDrawer(false);
+        }}
+        open={drawer}
+      >
+      
+      </Drawer>
+      <AddAssetForm/>
     </Layout.Header>
   );
 };
