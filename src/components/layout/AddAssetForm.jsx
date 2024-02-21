@@ -12,6 +12,7 @@ import {
   Result,
 } from "antd";
 import { UseCrypto } from "../../context/crypto-context";
+import CoinInfo from "./CoinInfo";
 
 const validateMessages = {
   required: "${label} is required",
@@ -32,13 +33,12 @@ const AddAssetForm = () => {
   if (submitted) {
     <Result
       status="success"
-      title="Successfully Purchased Cloud Server ECS!"
-      subTitle="Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait."
+      title="New Asset Added"
+      subTitle={`Added ${42} of ${coin.name} by price ${24}$`}
       extra={[
-        <Button type="primary" key="console">
-          Go Console
+        <Button type="primary" key="console" onClick={onClose}>
+          Close
         </Button>,
-        <Button key="buy">Buy Again</Button>,
       ]}
     />;
   }
@@ -73,6 +73,7 @@ const AddAssetForm = () => {
 
   function onFinish(values) {
     console.log("values", values);
+    setsubmitted(true);
   }
 
   function handleAmountChange() {
@@ -109,16 +110,7 @@ const AddAssetForm = () => {
         onFinish={onFinish}
         validateMessages={validateMessages}
       >
-        <Flex align="center">
-          <img
-            src={coin.icon}
-            alt={coin.name}
-            style={{ width: 40, marginRight: 10 }}
-          />
-          <Typography.Title level={2} style={{ margin: 0 }}>
-            {coin.name}
-          </Typography.Title>
-        </Flex>
+        <CoinInfo coin={coin} />
         <Divider />
         <Form.Item
           label="Amount"
