@@ -9,12 +9,39 @@ import {
   InputNumber,
   Button,
   DatePicker,
+  Result,
 } from "antd";
 import { UseCrypto } from "../../context/crypto-context";
 
+const validateMessages = {
+  required: "${label} is required",
+  types: {
+    nember: "${label} is not valid number",
+  },
+  number: {
+    range: "${label} must between ${min} and ${max}",
+  },
+};
+
 const AddAssetForm = () => {
+  const [form] = Form.useForm();
   const { crypto } = UseCrypto();
   const [coin, setCoin] = useState(null);
+  const [submitted, setsubmitted] = useState(false);
+
+  if (submitted) {
+    <Result
+      status="success"
+      title="Successfully Purchased Cloud Server ECS!"
+      subTitle="Order number: 2017182818828182881 Cloud server configuration takes 1-5 minutes, please wait."
+      extra={[
+        <Button type="primary" key="console">
+          Go Console
+        </Button>,
+        <Button key="buy">Buy Again</Button>,
+      ]}
+    />;
+  }
 
   if (!coin) {
     return (
@@ -48,9 +75,24 @@ const AddAssetForm = () => {
     console.log("values", values);
   }
 
+  function handleAmountChange() {
+    const amount = form.getFieldValue("price");
+    form.setFieldsValue({
+      total: +(value * price).toFixed(2),
+    });
+  }
+
+  function handlePriceChange() {
+    const amount = form.getFieldValue("amount");
+    form.setFieldsValue({
+      total: +(amount * value).toFixed(2),
+    });
+  }
+
   return (
     <Form>
       <Form
+        form={form}
         name="basic"
         labelCol={{
           span: 4,
@@ -61,8 +103,11 @@ const AddAssetForm = () => {
         style={{
           maxWidth: 600,
         }}
-        initialValues={{}}
+        initialValues={{
+          price: +coin.price.toFixed(2),
+        }}
         onFinish={onFinish}
+        validateMessages={validateMessages}
       >
         <Flex align="center">
           <img
@@ -83,19 +128,26 @@ const AddAssetForm = () => {
               required: true,
               type: "number",
               min: 0,
-              message: "Please input your username!",
             },
           ]}
         >
-          <InputNumber style={{ width: "100%" }} />
+          <InputNumber
+            placeholder="Enter coin amount"
+            onChange={handleAmountChange}
+            style={{ width: "100%" }}
+          />
         </Form.Item>
 
         <Form.Item label="Price" name="price">
-          <InputNumber disabled style={{ width: "100%" }} />
+          <InputNumber
+            onChange={handlePriceChange}
+            disabled
+            style={{ width: "100%" }}
+          />
         </Form.Item>
 
         <Form.Item label="Data & Time" name="date">
-          <DatePicker showTime/>
+          <DatePicker showTime />
         </Form.Item>
 
         <Form.Item label="Total" name="total">
