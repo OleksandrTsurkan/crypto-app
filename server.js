@@ -1,8 +1,7 @@
-const express = require("express");
+const express = require('express')
+const app = express()
+const port = 80
 
-const app = express();
+app.use(express.static('frontend/dist'))
 
-const port = 80;
-
-app.use(express.static("frontend/dist"));
-app.listen(port, () => console.log("server started"));
+app.listen(port, () => console.log('Server has been started on port 80...'))
