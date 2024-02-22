@@ -1,6 +1,8 @@
 import React from "react";
 import { Layout, Typography } from "antd";
 import { UseCrypto } from "../../context/crypto-context";
+import { AssetsTable } from "./AssetsTable";
+import PortfolioChart from "./PortfolioChart";
 
 const contentStyle = {
   textAlign: "center",
@@ -30,6 +32,8 @@ const AppContent = () => {
           .toFixed(2)}
         $
       </Typography.Title>
+      <PortfolioChart />
+      <AssetsTable />
     </Layout.Content>
   );
 };
